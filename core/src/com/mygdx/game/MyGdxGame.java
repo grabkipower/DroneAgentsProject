@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import JadePackage.JadeController;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,6 +21,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void create() {
+        JadeController jade = new JadeController();
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
