@@ -19,20 +19,21 @@ import java.util.List;
  * Created by Mike on 07.05.2017.
  */
 public class GameController {
-    JadeController Jade;
-    PhysicsEngine Physics;
+    JadeController JadeEngine;
+    PhysicsEngine PhysicsEngine;
 
     public Master MasterRobot;
-    public List<MainAgent> Robots = new ArrayList<MainAgent>();
+    public List<MainAgent> Agents = new ArrayList<MainAgent>();
 
     private static GameController ourInstance = new GameController();
-
     public static GameController getInstance() {
         return ourInstance;
     }
 
+
+
     private GameController() {
-        Jade = JadeController.getInstance();
+        JadeEngine = JadeController.getInstance();
         CreateAgents();
     }
 
@@ -46,20 +47,21 @@ public class GameController {
         }
 
         // Spawn Master
-        MasterRobot = Jade.CreateMasterAgent();
+        MasterRobot = JadeEngine.CreateMasterAgent();
     }
 
     public void AddAgents(Vector2 vec, int index)
     {
-        AgentPhysics agent = new  AgentPhysics(vec,new Vector2(0,0),32,32);
-        RobotAgent rob = Jade.CreateWorkingAgent(agent, index);
-        AgentGraphic graphic = new AgentGraphic();
-        Robots.add(new MainAgent(graphic,rob));
+        AgentPhysics phycicsAgent = new  AgentPhysics(vec,new Vector2(0,0),32,32);
+        RobotAgent JadeAgent = JadeEngine.CreateWorkingAgent(index);
+        AgentGraphic GraphicalAgent = new AgentGraphic();
+        Configuration conf = new Configuration(vec,index);
+        Agents.add(new MainAgent(GraphicalAgent,JadeAgent,phycicsAgent, conf));
     }
 
     private void UpdateAgents()
     {
-        for( MainAgent agent : Robots)
+        for( MainAgent agent : Agents)
             agent.Update();
     }
 

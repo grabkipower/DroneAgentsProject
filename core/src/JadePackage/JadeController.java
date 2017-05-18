@@ -16,15 +16,12 @@ import jade.wrapper.StaleProxyException;
 public class JadeController {
     ContainerController myContainer;
     private static JadeController ourInstance = new JadeController();
-
     public static JadeController getInstance() {
         return ourInstance;
     }
 
-
     public JadeController() {
         Runtime myRuntime = Runtime.instance();
-
 // prepare the settings for the platform that we're going to start
         Profile myProfile = new ProfileImpl("localhost", 1099, Profile.PLATFORM_ID);
         myProfile.setParameter(Profile.PLATFORM_ID, "MyMainPlatform");
@@ -33,13 +30,11 @@ public class JadeController {
         myContainer = myRuntime.createMainContainer(myProfile);
     }
 
-    public RobotAgent CreateWorkingAgent(AgentPhysics physics, int index) {
+    public RobotAgent CreateWorkingAgent( int index) {
         try {
             RobotAgent robot = new RobotAgent();
-            robot.SetPhysics(physics);
             AgentController cont = myContainer.acceptNewAgent("Agent_" + index, robot);
             cont.start();
-//            rma = myContainer.createNewAgent("agencik", "JadePackage.RobotAgent", null);
 //            rma.start();
             return robot;
         } catch (StaleProxyException e) {
@@ -54,7 +49,6 @@ public class JadeController {
             Master master = new Master();
             AgentController cont = myContainer.acceptNewAgent("Master" , master);
             cont.start();
-//            rma = myContainer.createNewAgent("agencik", "JadePackage.RobotAgent", null);
 //            rma.start();
             return master;
         } catch (StaleProxyException e) {

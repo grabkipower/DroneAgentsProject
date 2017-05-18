@@ -3,6 +3,7 @@ package JadePackage;
 import Interfaces.AgentInterface;
 import Physics.AgentPhysics;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.MainAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
@@ -16,13 +17,11 @@ import jade.wrapper.AgentController;
  * Created by Mike on 07.05.2017.
  */
 public class RobotAgent extends Agent {
-    public AgentPhysics PhysicalAgent;
+    MainAgent main;
 
-
-    public void SetPhysics(AgentPhysics agentPhysics) {
-        PhysicalAgent = agentPhysics;
+    public void setMain(MainAgent main) {
+        this.main = main;
     }
-
 
     Behaviour wait;
     protected  void setup()
@@ -35,7 +34,7 @@ public class RobotAgent extends Agent {
                 {
                     if( msg.getPerformative() == ACLMessage.INFORM) {
                         System.out.println("Dostalem rozkaz");
-                        PhysicalAgent.LestMove = true;
+
                     }
                 }
             }
@@ -65,10 +64,7 @@ public class RobotAgent extends Agent {
         }
     };
 
-    public Vector2 GetAgentPosition()
-    {
-        return PhysicalAgent.GetPosition();
-    }
+
 
     Behaviour WaitForTasks = new CyclicBehaviour() {
         @Override

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
@@ -13,10 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyOrthogonalMap extends OrthogonalTiledMapRenderer {
-    private Sprite sprite;
-    private SpriteBatch sb;
     private List<Sprite> sprites;
-    private int drawSpritesAfterLayer = 1;
+    private int drawSpritesAfterLayer = 3;
 
     public MyOrthogonalMap(TiledMap map) {
         super(map);

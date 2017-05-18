@@ -48,14 +48,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-//        if (keycode == Input.Keys.LEFT)
-//            camera.translate(-32, 0);
-//        if (keycode == Input.Keys.RIGHT)
-//            camera.translate(32, 0);
-//        if (keycode == Input.Keys.DOWN)
-//            camera.translate(0, -32);
-//        if (keycode == Input.Keys.UP)
-//            camera.translate(0, 32);
+        if (keycode == Input.Keys.LEFT)
+          Graphics.camera.translate(-32, 0);
+        if (keycode == Input.Keys.RIGHT)
+            Graphics.camera.translate(32, 0);
+        if (keycode == Input.Keys.DOWN)
+            Graphics.camera.translate(0, -32);
+        if (keycode == Input.Keys.UP)
+            Graphics.camera.translate(0, 32);
 //        if (keycode == Input.Keys.NUM_1)
 //            tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
 //        if (keycode == Input.Keys.NUM_2)

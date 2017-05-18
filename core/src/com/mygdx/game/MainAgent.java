@@ -1,29 +1,39 @@
 package com.mygdx.game;
 
 import Graphics.AgentGraphic;
+import Graphics.GraphicsEngine;
 import JadePackage.RobotAgent;
+import Physics.AgentPhysics;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
  * Created by Mike on 09.05.2017.
  */
 public class MainAgent {
-    public AgentGraphic graphical;
-    public RobotAgent jade;
+    public AgentGraphic GraphicalAgent;
+    public RobotAgent JadeAgent;
+    public AgentPhysics PhysicalAgent;
+    public Configuration Conf;
 
-    public MainAgent(AgentGraphic graphical, RobotAgent jade) {
-        this.graphical = graphical;
-        this.jade = jade;
+    public MainAgent(AgentGraphic graphicalAgent, RobotAgent jadeAgent, AgentPhysics physicalAgent, Configuration conf) {
+        GraphicalAgent = graphicalAgent;
+        JadeAgent = jadeAgent;
+        PhysicalAgent = physicalAgent;
+        Conf = conf;
+
+        GraphicalAgent.setMain(this);
+        JadeAgent.setMain(this);
+        PhysicalAgent.setMain(this);
     }
 
     public void InitializeGraphic(Texture texture)
     {
-        graphical.Initialize(jade,texture);
+        GraphicalAgent.Initialize(texture);
     }
 
     public void Update()
     {
-        jade.PhysicalAgent.Update();
-        graphical.Update(jade);
+        PhysicalAgent.Update();
+        GraphicalAgent.Update();
     }
 }

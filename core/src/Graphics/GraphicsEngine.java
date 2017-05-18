@@ -21,7 +21,7 @@ public class GraphicsEngine {
     GameController MainGameController;
     Texture img;
     TiledMap tiledMap;
-    OrthographicCamera camera;
+  public  OrthographicCamera camera;
     //TiledMapRenderer tiledMapRenderer;
     MyOrthogonalMap tiledMapRenderer;
     SpriteBatch sb;
@@ -43,17 +43,18 @@ public class GraphicsEngine {
         camera.update();
 
         texture = new Texture(Gdx.files.internal("image.png"));
+
         sprite = new Sprite(texture);
-        tiledMap = new TmxMapLoader().load("desert.tmx");
+        tiledMap = new TmxMapLoader().load("map.tmx");
         tiledMapRenderer = new MyOrthogonalMap(tiledMap);
         InitializeObjects();
     }
 
     private void InitializeObjects()
     {
-        for( MainAgent agent: MainGameController.Robots) {
+        for( MainAgent agent: MainGameController.Agents) {
             agent.InitializeGraphic(texture);
-            tiledMapRenderer.addSprite(agent.graphical.sprite);
+            tiledMapRenderer.addSprite(agent.GraphicalAgent.sprite);
         }
 
     }
