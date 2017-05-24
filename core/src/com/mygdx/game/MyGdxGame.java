@@ -20,6 +20,9 @@ import java.util.List;
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     GameController MainGameController;
     GraphicsEngine Graphics;
+    static final double DT = 1/1.0;
+    static final int MAX_UPDATES_PER_FRAME = 1; //for preventing spiral of death
+    private long currentTimeMillis;
 
     public MyGdxGame()
     {
@@ -28,14 +31,34 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void create() {
-
-        MainGameController = GameController.getInstance();
         Graphics.create();
+        MainGameController = GameController.getInstance();
+        MainGameController.CreateMap(Graphics.GetTiledMap());
+        MainGameController.ReinitializeSpawns();
+
+        currentTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void render() {
-        MainGameController.UpdateGame();
+
+
+        long newTimeMillis = System.currentTimeMillis();
+        float frameTimeSeconds = (newTimeMillis - currentTimeMillis);
+        if( frameTimeSeconds > 1000) {
+            currentTimeMillis = newTimeMillis;
+            MainGameController.UpdateGame();
+        }
+
+//        int updateCount = 0;
+//        while (frameTimeSeconds > 0.0f && updateCount <= MAX_UPDATES_PER_FRAME) {
+//            double deltaTimeSeconds =  DT;
+//            frameTimeSeconds -= deltaTimeSeconds;
+//            ++updateCount;
+//        }
+
+
+
         Graphics.render();
         Gdx.input.setInputProcessor(this);
     }

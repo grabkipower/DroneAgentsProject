@@ -3,6 +3,7 @@ package JadePackage;
 import Interfaces.AgentInterface;
 import Physics.AgentPhysics;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -12,6 +13,8 @@ import jade.lang.acl.ACLMessage;
 import jade.proto.ProposeInitiator;
 import jade.proto.ProposeResponder;
 import jade.wrapper.AgentController;
+
+import java.awt.*;
 
 /**
  * Created by Mike on 07.05.2017.
@@ -34,7 +37,8 @@ public class RobotAgent extends Agent {
                 {
                     if( msg.getPerformative() == ACLMessage.INFORM) {
                         System.out.println("Dostalem rozkaz");
-
+                        Point Transit =GameController.getInstance().map.GetMapRepresentation().GetTransitPositions().get(10);
+                        main.PhysicalAgent.NewRoute(Transit);
                     }
                 }
             }

@@ -21,7 +21,7 @@ public class GraphicsEngine {
     GameController MainGameController;
     Texture img;
     TiledMap tiledMap;
-  public  OrthographicCamera camera;
+    public OrthographicCamera camera;
     //TiledMapRenderer tiledMapRenderer;
     MyOrthogonalMap tiledMapRenderer;
     SpriteBatch sb;
@@ -29,12 +29,15 @@ public class GraphicsEngine {
     List<Sprite> AgentRobotSprites;
     Sprite sprite;
 
-    public GraphicsEngine( )
-    {
+    public TiledMap GetTiledMap() {
+        return tiledMap;
+    }
+
+    public GraphicsEngine() {
         MainGameController = GameController.getInstance();
     }
-    public void create()
-    {
+
+    public void create() {
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
@@ -42,7 +45,7 @@ public class GraphicsEngine {
         camera.setToOrtho(false, w, h);
         camera.update();
 
-        texture = new Texture(Gdx.files.internal("image.png"));
+        texture = new Texture(Gdx.files.internal("Robotics.png"));
 
         sprite = new Sprite(texture);
         tiledMap = new TmxMapLoader().load("map.tmx");
@@ -50,9 +53,8 @@ public class GraphicsEngine {
         InitializeObjects();
     }
 
-    private void InitializeObjects()
-    {
-        for( MainAgent agent: MainGameController.Agents) {
+    private void InitializeObjects() {
+        for (MainAgent agent : MainGameController.Agents) {
             agent.InitializeGraphic(texture);
             tiledMapRenderer.addSprite(agent.GraphicalAgent.sprite);
         }
@@ -60,8 +62,7 @@ public class GraphicsEngine {
     }
 
 
-    public void render()
-    {
+    public void render() {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

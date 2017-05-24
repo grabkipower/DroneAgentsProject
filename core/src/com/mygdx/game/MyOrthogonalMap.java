@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MyOrthogonalMap extends OrthogonalTiledMapRenderer {
     private List<Sprite> sprites;
-    private int drawSpritesAfterLayer = 3;
+    private int drawSpritesAfterLayer = 4;
     List<GridCell> path;
 
     public MyOrthogonalMap(TiledMap map) {
