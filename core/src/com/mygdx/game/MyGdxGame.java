@@ -33,6 +33,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
     public void create() {
         Graphics.create();
         MainGameController = GameController.getInstance();
+        MainGameController.SetTiledMap(Graphics.GetTiledMap());
         MainGameController.CreateMap(Graphics.GetTiledMap());
         MainGameController.ReinitializeSpawns();
 

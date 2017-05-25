@@ -26,7 +26,7 @@ import java.util.Random;
  */
 public class GameController {
     public JadeController JadeEngine;
-    PhysicsEngine PhysicsEngine;
+    public static TiledMap tiledMap;
 
     public static MapMain map;
 
@@ -49,6 +49,14 @@ public class GameController {
         JadeEngine = JadeController.getInstance();
         CreateAgents();
         map = new MapMain();
+    }
+    public void SetTiledMap(TiledMap tile)
+    {
+        tiledMap = tile;
+    }
+    public TiledMap GetTiledmap()
+    {
+        return tiledMap;
     }
 
     public void CreateMap(TiledMap Tiledmap) {

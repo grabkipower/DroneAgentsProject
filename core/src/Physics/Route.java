@@ -15,25 +15,28 @@ import java.util.List;
 import static java.lang.Math.cos;
 import static java.lang.StrictMath.atan2;
 import static java.lang.StrictMath.sin;
-import static java.lang.StrictMath.sqrt;
 
-/**
- * Created by Mike on 24.05.2017.
- */
 public class Route {
     boolean KeepMoving = true;
     AgentPhysics agent;
     Point Start;
     Point End;
-    static MapRepresentation  map;
-    List<GridCell> path = new ArrayList<GridCell>();
+    MapRepresentation map;
+    List<GridCell> path;
+    List<Point> MyPath;
     GridFinderOptions opt;
     ThetaStarGridFinder<GridCell> finder;
-    GridCell CurrentDestination;
+    Point CurrentDestination;
     int index = 0;
     double vel = GameConfig.Velocity;
     boolean ismove;
     Vector2 Direction;
+    RouteStatus Status;
+    int pathsize = 0;
+
+    public enum RouteStatus {
+        Moving, CollisionDetected, DestinationAchieved
+    }
 
     public Route(Point start, Point end, MapRepresentation rep, AgentPhysics _agent) {
         Start = start;
@@ -43,23 +46,30 @@ public class Route {
         opt = new GridFinderOptions();
         finder = new ThetaStarGridFinder<GridCell>(GridCell.class, opt);
         FindRoute();
+        Status = RouteStatus.Moving;
     }
 
     public void GetNextCell() {
-        if (index == path.size()) {
-            KeepMoving = false;
+        if (index == MyPath.size()) {
+            Status = RouteStatus.DestinationAchieved;
             return;
         }
-        CurrentDestination = path.get(index);
+        if (Status == RouteStatus.DestinationAchieved)
+            return;
+        CurrentDestination = MyPath.get(index);
         index++;
         Point Delta = new Point(CurrentDestination.x - agent.position.x, CurrentDestination.y - agent.position.y);
         double InclAngle = atan2(Delta.y, Delta.x);
         Direction = new Vector2((float) cos(InclAngle), (float) sin(InclAngle));
     }
 
+
     public void MakeMove() {
-        if (CurrentDestination == null)
+        if (CurrentDestination == null) {
             GetNextCell();
+        }
+        if (Status == RouteStatus.DestinationAchieved)
+            return;
 
         agent.PhysicalPosition.x += vel * Direction.x;
         agent.PhysicalPosition.y += vel * Direction.y;
@@ -68,7 +78,6 @@ public class Route {
             agent.SetPhysicalFromPointPosition();
             GetNextCell();
         }
-        String domek = "";
     }
 
     private boolean CheckForBoundary() {
@@ -102,16 +111,20 @@ public class Route {
         GridCell start = map.GridCells.getCell(Start.x, Start.y), end = map.GridCells.getCell(End.x, End.y);
 
         //test orthogonal movement only
-        opt.allowDiagonal = true;
+        opt.allowDiagonal = false;
         opt.dontCrossCorners = true;
 
-try {
-    path = finder.findPath(start, end, map.GridCells);
-}catch (Exception e)
-{
-    int a =2;
-}
 
+        path = finder.findPath(start, end, map.GridCells);
+        if (path == null) {
+            int a = 2;
+        }
+        pathsize = path.size();
+        MyPath = new ArrayList<Point>();
+        for( GridCell x : path)
+        {
+            MyPath.add(new Point( x.x,x.y));
+        }
 
 
 //        //TODO: smarter test...how to make sure path is smooth?
@@ -134,6 +147,5 @@ try {
 //            System.out.println("    (" + (i++) + ") " + cell);
 //        }
     }
-
 
 }

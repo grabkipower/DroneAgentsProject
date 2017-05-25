@@ -2,6 +2,9 @@ package Physics;
 
 import Interfaces.AgentInterface;
 import Map.MapMain;
+import Map.MapRepresentation;
+import TaskPackage.Task;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
@@ -18,6 +21,7 @@ public class AgentPhysics extends PhysicsObject {
     Vector2 DestinationPosition;
     Route CurrentRoute;
     Point End;
+    MapMain mainMap;
 
 
     public boolean LestMove = false;
@@ -59,26 +63,63 @@ public class AgentPhysics extends PhysicsObject {
     }
 
     public void Update() {
-        if( End != null)
-        {
-            MapMain newMap = new MapMain();
-            newMap.CreateMapRep(GameController.getInstance().map.GetMapRepresentation());
-            GameController.getInstance().map.RefreshGrid();
-            CurrentRoute = new Route(position, End, GameController.getInstance().map.GetMapRepresentation(), this);
-            End = null;
-        }
-        if (CurrentRoute != null && CurrentRoute.KeepMoving) {
+        HandleTaskIfNotNull();
+        if (CurrentRoute != null) {
             CurrentRoute.MakeMove();
         }
-        if(CurrentRoute != null && CurrentRoute.KeepMoving == false)
-        {
-            OnDestinationAchieved();
-        }
+
         //  if (LestMove)
         //  position.add(new Point(1, 1));
         // Collision check
         // Move prediction
         // Check with route
         // Actual position change
+    }
+
+
+    public void HandleTaskIfNotNull() {
+        if( main.CurrentTaskId != -1) {
+            main.CurrentTask = GameController.getInstance().UndoneTasks.get(main.CurrentTaskId);
+            main.CurrentTaskId = -1;
+        }
+        if (main.CurrentTask == null)
+            return;
+    if( mainMap == null)
+    {
+        mainMap = new MapMain();
+        mainMap.CreateGrid( new TmxMapLoader().load("map.tmx"));
+    }
+
+        switch (main.CurrentTask.Status) {
+
+            case NotBegan:
+
+                mainMap.RefreshGrid();
+                CurrentRoute = new Route(position, main.CurrentTask.GetStartPoint(), mainMap.GetMapRepresentation(), this);
+                main.CurrentTask.Status = Task.TaskStage.MovingToStart;
+                break;
+            case MovingToStart:
+                if (CurrentRoute.Status == Route.RouteStatus.DestinationAchieved) {
+                    main.CurrentTask.Status = Task.TaskStage.StartPointAchieved;
+                    main.CurrentTask.ResetWait();
+                }
+                break;
+            case StartPointAchieved:
+                if (main.CurrentTask.IsEndWait()) {
+                    mainMap.RefreshGrid();
+                    CurrentRoute = new Route(position, main.CurrentTask.GetEndPoint(), mainMap.GetMapRepresentation(), this);
+                    main.CurrentTask.Status = Task.TaskStage.MovingToEnd;
+                }
+                break;
+            case MovingToEnd:
+                if (CurrentRoute.Status == Route.RouteStatus.DestinationAchieved) {
+                    main.CurrentTask.Status = Task.TaskStage.TaskEnded;
+                }
+                break;
+            case EndPointAchieved:
+                break;
+            case TaskEnded:
+                break;
+        }
     }
 }

@@ -27,7 +27,6 @@ import java.awt.*;
  */
 public class RobotAgent extends Agent {
     MainAgent main;
-    Task CurrentTask;
     AID TaskTopic;
     MessageTemplate TaskTpl;
 
@@ -75,7 +74,7 @@ public class RobotAgent extends Agent {
         @Override
         public void action() {
             ACLMessage msg = receive();
-            if( msg != null)
+            if( msg != null )
             {
                 HandleReceivedTask(msg.getContent());
                 removeBehaviour(this);
@@ -89,8 +88,7 @@ public class RobotAgent extends Agent {
     private void HandleReceivedTask(String content)
     {
         int id = Integer.parseInt(content);
-        CurrentTask = GameController.getInstance().UndoneTasks.get(id);
-        main.PhysicalAgent.NewRoute(CurrentTask.Transit);
+        main.CurrentTaskId = id;
 
     }
 

@@ -4,6 +4,7 @@ import Graphics.AgentGraphic;
 import Graphics.GraphicsEngine;
 import JadePackage.RobotAgent;
 import Physics.AgentPhysics;
+import TaskPackage.Task;
 import com.badlogic.gdx.graphics.Texture;
 
 /**
@@ -14,6 +15,8 @@ public class MainAgent {
     public RobotAgent JadeAgent;
     public AgentPhysics PhysicalAgent;
     public Configuration Conf;
+    public Task CurrentTask;
+    public int CurrentTaskId = -1;
 
     public MainAgent(AgentGraphic graphicalAgent, RobotAgent jadeAgent, AgentPhysics physicalAgent, Configuration conf) {
         GraphicalAgent = graphicalAgent;
@@ -26,13 +29,11 @@ public class MainAgent {
         PhysicalAgent.setMain(this);
     }
 
-    public void InitializeGraphic(Texture texture)
-    {
+    public void InitializeGraphic(Texture texture) {
         GraphicalAgent.Initialize(texture);
     }
 
-    public void Update()
-    {
+    public void Update() {
         PhysicalAgent.Update();
         GraphicalAgent.Update();
     }

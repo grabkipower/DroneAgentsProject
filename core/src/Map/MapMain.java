@@ -36,6 +36,8 @@ public class MapMain {
 
     }
 
+
+
     public void CreateMapRep(MapRepresentation map)
     {
         MapRep = new MapRepresentation(map.Width,map.Height);

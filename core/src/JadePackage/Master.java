@@ -91,14 +91,17 @@ public class Master extends Agent {
             ACLMessage msg = receive();
             if (msg != null) {
                 ACLMessage reply = msg.createReply();
+                reply.addReceiver(msg.getSender());
                 if (msg.getPerformative() == ACLMessage.REQUEST)
                 {
                     // Jezeli agent poprosil o zadanie to mu odpowiedz
                     if (GameController.getInstance().UndoneTasks.size() != 0)
                     {
+
                         reply.setPerformative(ACLMessage.CONFIRM);
                         reply.setContent((Integer.toString( GameController.getInstance().UndoneTasks.get(index).id)));
                         index++;
+                        System.out.println("Master: wysyłam zlecenie do zadania o numerze: "+ Integer.toString(index));
 
                     }
                     else{
