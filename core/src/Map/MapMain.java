@@ -36,6 +36,13 @@ public class MapMain {
 
     }
 
+    public void CreateMapRep(MapRepresentation map)
+    {
+        MapRep = new MapRepresentation(map.Width,map.Height);
+        MapRep.GridCells = map.GridCells;
+        MapRep.IntCells = map.IntCells;
+    }
+
     public void CreateGrid(TiledMap map) {
         MapRep = NavGraphFactory.CreateRepMap(map);
         TileWidthNumber = MapRep.Width;

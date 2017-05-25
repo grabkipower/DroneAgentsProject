@@ -45,7 +45,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         long newTimeMillis = System.currentTimeMillis();
         float frameTimeSeconds = (newTimeMillis - currentTimeMillis);
-        if( frameTimeSeconds > 1000) {
+        if( frameTimeSeconds > 1) {
             currentTimeMillis = newTimeMillis;
             MainGameController.UpdateGame();
         }

@@ -15,7 +15,23 @@ public class GameConfig {
         add(new Point(100, 10));
         add(new Point(200,10));
     }};
+    public static List<String> CarryNames = new ArrayList<String>() {{
+        add( "Fish");
+        add( "Mechanical Parts");
+        add( "Toys");
+        add( "Phones");
+        add( "PC Parts");
+        add( "Trousers");
+        add( "Tissues");
+        add( "Chips");
+        add( "Drones");
+        add( "Javelin Rockets");
+    }};
+
     public static int MapWidth = 100;
     public static int MapHeight = 100;
+    public static double Velocity = 3.5f;
+    public static float TileSize = 32;
+    public static float Threshold = 0.00001f;
 
 }

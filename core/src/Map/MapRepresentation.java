@@ -35,6 +35,18 @@ public class MapRepresentation {
         return ret;
     }
 
+    public List<Point> GetRackPositions() {
+        List<Point> ret = new ArrayList<Point>();
+        for (int i = 0; i < Width; i++)
+            for (int j = 0; j < Height; j++) {
+                if (IntCells[i][j] == MapMain.Rack) {
+                    Point p = new Point(i, j);
+                    ret.add(p);
+                }
+            }
+        return ret;
+    }
+
     public List<Point> GetTransitPositions(){
         List<Point> ret = new ArrayList<Point>();
         for (int i = 0; i < Width; i++)

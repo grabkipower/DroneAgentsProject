@@ -7,6 +7,8 @@ import JadePackage.RobotAgent;
 import Map.MapMain;
 import Physics.AgentPhysics;
 import Physics.PhysicsEngine;
+import TaskPackage.Order;
+import TaskPackage.Task;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,18 +19,24 @@ import com.badlogic.gdx.math.Vector2;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Mike on 07.05.2017.
  */
 public class GameController {
-    JadeController JadeEngine;
+    public JadeController JadeEngine;
     PhysicsEngine PhysicsEngine;
 
-    public MapMain map;
+    public static MapMain map;
 
     public Master MasterRobot;
     public List<MainAgent> Agents = new ArrayList<MainAgent>();
+
+    public List<Order> orders = new ArrayList<Order>();
+    public List<Task> UndoneTasks = new ArrayList<Task>();
+
+
 
     private static GameController ourInstance = new GameController();
 
@@ -90,5 +98,15 @@ public class GameController {
 
     public void UpdateGame() {
         UpdateAgents();
+    }
+
+    public void AddOrder(boolean transitToShelf )
+    {
+        List<Point> Transits = map.GetMapRepresentation().GetTransitPositions();
+        Random generator = new Random(System.currentTimeMillis());
+        int Index = generator.nextInt(Transits.size());
+        Order order = new Order(Transits.get(Index),transitToShelf , 20, orders.size()+1);
+        orders.add(order);
+        UndoneTasks.addAll(order.CreateTasks());
     }
 }

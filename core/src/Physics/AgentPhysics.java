@@ -1,10 +1,12 @@
 package Physics;
 
 import Interfaces.AgentInterface;
+import Map.MapMain;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
 import org.xguzm.pathfinding.grid.GridCell;
+import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
 
 import java.awt.*;
 
@@ -25,7 +27,10 @@ public class AgentPhysics extends PhysicsObject {
 
 
     public void NewRoute(Point End) {
-        CurrentRoute = new Route(position,End, GameController.getInstance().map.GetMapRepresentation());
+        MapMain newMap = new MapMain();
+        newMap.CreateMapRep(GameController.getInstance().map.GetMapRepresentation());
+        CurrentRoute = new Route(position, End, newMap.GetMapRepresentation(), this);
+
     }
 
     public AgentPhysics(Point position, Point velocity, int width, int height) {
@@ -37,25 +42,34 @@ public class AgentPhysics extends PhysicsObject {
         return position;
     }
 
+    public Vector2 GetPhysicalPosition() {
+        return PhysicalPosition;
+    }
+
     public void SetPoisition(Point vec) {
         position = vec;
+        PhysicalPosition.x = position.x * 32;
+        PhysicalPosition.y = position.y * 32;
+    }
+
+    public void OnCollision() {
+
+    }
+
+    public void OnDestinationAchieved() {
+        CurrentRoute = null;
     }
 
     public void Update() {
-        if( CurrentRoute != null)
-        {
-            GridCell cell = CurrentRoute.GetNextCell();
-
-
-            position.x = cell.x;
-            position.y = cell.y;
-            if(!CurrentRoute.EndMove())
-            {
-                CurrentRoute = null;
-            }
+        if (CurrentRoute != null && CurrentRoute.KeepMoving) {
+            CurrentRoute.MakeMove();
         }
-      //  if (LestMove)
-          //  position.add(new Point(1, 1));
+        if(CurrentRoute != null && CurrentRoute.KeepMoving == false)
+        {
+            OnDestinationAchieved();
+        }
+        //  if (LestMove)
+        //  position.add(new Point(1, 1));
         // Collision check
         // Move prediction
         // Check with route

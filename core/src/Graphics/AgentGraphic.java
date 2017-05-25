@@ -31,7 +31,9 @@ public class AgentGraphic {
 
     public void Update() {
         Point Pos = main.PhysicalAgent.GetPosition();
+        Vector2 Phys = main.PhysicalAgent.GetPhysicalPosition();
         int offset = 0;
-        sprite.setPosition((offset +Pos.x)* 32, (offset +Pos.y)*32);
+    //    sprite.setPosition((offset +Pos.x)* 32, (offset +Pos.y)*32);
+        sprite.setPosition(Phys.x, Phys.y);
     }
 }

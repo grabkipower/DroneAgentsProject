@@ -8,9 +8,10 @@ import java.awt.*;
 /**
  * Created by Mike on 07.05.2017.
  */
-public class PhysicsObject  {
+public class PhysicsObject {
     protected Point position;
     protected Point velocity;
+    protected Vector2 PhysicalPosition;
     protected int width;
     protected int height;
 
@@ -19,6 +20,13 @@ public class PhysicsObject  {
         this.velocity = velocity;
         this.width = width;
         this.height = height;
+        PhysicalPosition = new Vector2(position.x * 32, position.y * 32);
+
+    }
+
+    public void SetPhysicalFromPointPosition()
+    {
+        PhysicalPosition = new Vector2(position.x * 32, position.y * 32);
     }
 
 

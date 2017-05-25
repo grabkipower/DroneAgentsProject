@@ -66,6 +66,15 @@ public class NavGraphFactory {
                 cells[x][y] = GridCell;
             }
 
+        for( int i =0; i < 30; i++)
+            for( int j = 0; j < 30; j++)
+            {
+                if(cells[i][j].isWalkable() )
+                {
+                    int a = 2;
+                }
+            }
+
         rep.GridCells = new NavigationGrid<GridCell>(cells, false);
     }
 

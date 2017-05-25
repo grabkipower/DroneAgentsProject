@@ -38,6 +38,7 @@ public class GraphicsEngine {
     }
 
     public void create() {
+        Gdx.graphics.setWindowedMode(900,800);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
