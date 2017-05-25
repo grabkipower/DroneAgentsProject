@@ -5,7 +5,8 @@ import Map.MapMain;
 import Map.MapRepresentation;
 import TaskPackage.Task;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
 import org.xguzm.pathfinding.grid.GridCell;
@@ -52,15 +53,13 @@ public class AgentPhysics extends PhysicsObject {
         position = vec;
         PhysicalPosition.x = position.x * 32;
         PhysicalPosition.y = position.y * 32;
+        SetRectangle();
     }
 
     public void OnCollision() {
 
     }
 
-    public void OnDestinationAchieved() {
-        CurrentRoute = null;
-    }
 
     public void Update() {
         HandleTaskIfNotNull();
@@ -78,17 +77,12 @@ public class AgentPhysics extends PhysicsObject {
 
 
     public void HandleTaskIfNotNull() {
-        if( main.CurrentTaskId != -1) {
-            main.CurrentTask = GameController.getInstance().UndoneTasks.get(main.CurrentTaskId);
-            main.CurrentTaskId = -1;
-        }
         if (main.CurrentTask == null)
             return;
-    if( mainMap == null)
-    {
-        mainMap = new MapMain();
-        mainMap.CreateGrid( new TmxMapLoader().load("map.tmx"));
-    }
+        if (mainMap == null) {
+            mainMap = new MapMain();
+            mainMap.CreateGrid(new TmxMapLoader().load("map.tmx"));
+        }
 
         switch (main.CurrentTask.Status) {
 
@@ -119,6 +113,9 @@ public class AgentPhysics extends PhysicsObject {
             case EndPointAchieved:
                 break;
             case TaskEnded:
+                main.CurrentTask.IsDone = true;
+                GameController.getInstance().taskControl.SetAsDone(main.CurrentTask.id);
+                main.JadeAgent.TaskDone();
                 break;
         }
     }

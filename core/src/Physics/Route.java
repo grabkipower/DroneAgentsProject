@@ -1,10 +1,13 @@
 package Physics;
 
 import Map.MapRepresentation;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.GameConfig;
 import com.mygdx.game.GameController;
+import com.mygdx.game.MainAgent;
 import org.xguzm.pathfinding.grid.GridCell;
+import org.xguzm.pathfinding.grid.finders.AStarGridFinder;
 import org.xguzm.pathfinding.grid.finders.GridFinderOptions;
 import org.xguzm.pathfinding.grid.finders.ThetaStarGridFinder;
 
@@ -25,7 +28,7 @@ public class Route {
     List<GridCell> path;
     List<Point> MyPath;
     GridFinderOptions opt;
-    ThetaStarGridFinder<GridCell> finder;
+    AStarGridFinder finder;
     Point CurrentDestination;
     int index = 0;
     double vel = GameConfig.Velocity;
@@ -33,6 +36,7 @@ public class Route {
     Vector2 Direction;
     RouteStatus Status;
     int pathsize = 0;
+
 
     public enum RouteStatus {
         Moving, CollisionDetected, DestinationAchieved
@@ -44,7 +48,10 @@ public class Route {
         map = rep;
         agent = _agent;
         opt = new GridFinderOptions();
-        finder = new ThetaStarGridFinder<GridCell>(GridCell.class, opt);
+        //test orthogonal movement only
+        opt.allowDiagonal = true;
+        opt.dontCrossCorners = true;
+        finder = new AStarGridFinder(GridCell.class);
         FindRoute();
         Status = RouteStatus.Moving;
     }
@@ -71,13 +78,46 @@ public class Route {
         if (Status == RouteStatus.DestinationAchieved)
             return;
 
-        agent.PhysicalPosition.x += vel * Direction.x;
-        agent.PhysicalPosition.y += vel * Direction.y;
+        Vector2 CalculatedPosition = new Vector2(agent.PhysicalPosition.x,agent.PhysicalPosition.y);
+
+        CalculatedPosition.x += vel * Direction.x;
+        CalculatedPosition.y += vel * Direction.y;
+Rectangle rect = new Rectangle(CalculatedPosition.x,CalculatedPosition.y,32.0f,32.0f);
+
+
+
+//
+//       if( CheckForCollision(agent.GetRectangle()))
+//       {
+//           System.out.println(agent.main.Conf.Index + " Wykrylem kolicje ");
+//           return;
+//       }
+
+       agent.PhysicalPosition.x = CalculatedPosition.x;
+       agent.PhysicalPosition.y = CalculatedPosition.y;
+       agent.SetRectangle();
+
+        agent.SetRectangle();
+
         if (!CheckForBoundary()) {
             agent.position = new Point(CurrentDestination.x, CurrentDestination.y);
             agent.SetPhysicalFromPointPosition();
             GetNextCell();
         }
+
+    }
+
+    private boolean CheckForCollision( Rectangle currentRect) {
+        for( MainAgent AgentO : GameController.getInstance().Agents)
+        {
+            if( AgentO.Conf.Index != agent.main.Conf.Index)
+            {
+                if( Intersector.overlaps(AgentO.PhysicalAgent.GetRectangle(),currentRect))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean CheckForBoundary() {
@@ -110,10 +150,6 @@ public class Route {
 
         GridCell start = map.GridCells.getCell(Start.x, Start.y), end = map.GridCells.getCell(End.x, End.y);
 
-        //test orthogonal movement only
-        opt.allowDiagonal = false;
-        opt.dontCrossCorners = true;
-
 
         path = finder.findPath(start, end, map.GridCells);
         if (path == null) {
@@ -121,9 +157,8 @@ public class Route {
         }
         pathsize = path.size();
         MyPath = new ArrayList<Point>();
-        for( GridCell x : path)
-        {
-            MyPath.add(new Point( x.x,x.y));
+        for (GridCell x : path) {
+            MyPath.add(new Point(x.x, x.y));
         }
 
 

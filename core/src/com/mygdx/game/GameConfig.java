@@ -40,5 +40,9 @@ public class GameConfig {
     public static float Threshold = 0.00001f;
     public static int AgentLoadTime = 500000;
     public static long AgentsLoadTimeFloat = 5000;
+    public static long AddNewOrderTime = 20000;
+
+
+    public static String TaskOntology = "Task";
 
 }

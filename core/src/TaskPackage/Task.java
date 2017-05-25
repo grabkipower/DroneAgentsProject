@@ -12,7 +12,8 @@ public class Task {
     Carry carry;
     public Point Transit;
     public Point RackNearbyPosition;
-    boolean IsDone = false;
+    public boolean IsDone = false;
+    public boolean IsAssigned = false;
     public int id;
     public int OrderId;
     int AgentIndex = -1;

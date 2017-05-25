@@ -5,6 +5,7 @@ import Physics.AgentPhysics;
 import TaskPackage.Task;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameConfig;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
 import jade.core.AID;
@@ -29,6 +30,7 @@ public class RobotAgent extends Agent {
     MainAgent main;
     AID TaskTopic;
     MessageTemplate TaskTpl;
+
 
     public void setMain(MainAgent main) {
         this.main = main;
@@ -73,11 +75,17 @@ public class RobotAgent extends Agent {
     Behaviour WaitForTaskResponse = new CyclicBehaviour() {
         @Override
         public void action() {
-            ACLMessage msg = receive();
+            ACLMessage msg = receive(MessageTemplate.MatchOntology(GameConfig.TaskOntology));
             if( msg != null )
             {
-                HandleReceivedTask(msg.getContent());
-                removeBehaviour(this);
+                if( msg.getPerformative() == ACLMessage.CONFIRM) {
+                    HandleReceivedTask(msg.getContent());
+                    removeBehaviour(this);
+                }
+                else
+                {
+                    int aa =2;
+                }
             }
             else
                 block();
@@ -88,8 +96,11 @@ public class RobotAgent extends Agent {
     private void HandleReceivedTask(String content)
     {
         int id = Integer.parseInt(content);
-        main.CurrentTaskId = id;
+        main.CurrentTask = GameController.getInstance().taskControl.GetTaskById(id);
+    }
 
+    public void TaskDone(){
+        addBehaviour(AskForTask);
     }
 
 

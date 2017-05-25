@@ -3,6 +3,7 @@ package JadePackage;
 import TaskPackage.Order;
 import TaskPackage.Task;
 import com.badlogic.gdx.Game;
+import com.mygdx.game.GameConfig;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
 import jade.core.AID;
@@ -39,7 +40,6 @@ public class Master extends Agent {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                GameController.getInstance().AddOrder(false);
                 CreateTopics();
                 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
                 msg.addReceiver(new AID("Agent_1", AID.ISLOCALNAME));
@@ -71,17 +71,17 @@ public class Master extends Agent {
     Behaviour HandleOrders = new CyclicBehaviour() {
         @Override
         public void action() {
-            if (GameController.getInstance().UndoneTasks.size() != 0) {
-                // Broadcast that i have new task
-                ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                AddAllReceiversAllAgents(msg);
-                msg.setLanguage("English");
-                msg.setOntology("New-Task");
-                msg.setContent("Available");
-                send(msg);
-
-                // add behaviour giving out tasks
-            }
+//            if (GameController.getInstance().UndoneTasks.size() != 0) {
+//                // Broadcast that i have new task
+//                ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+//                AddAllReceiversAllAgents(msg);
+//                msg.setLanguage("English");
+//                msg.setOntology("New-Task");
+//                msg.setContent("Available");
+//                send(msg);
+//
+//                // add behaviour giving out tasks
+//            }
 
         }
     };
@@ -92,14 +92,15 @@ public class Master extends Agent {
             if (msg != null) {
                 ACLMessage reply = msg.createReply();
                 reply.addReceiver(msg.getSender());
+                reply.setOntology(GameConfig.TaskOntology);
                 if (msg.getPerformative() == ACLMessage.REQUEST)
                 {
                     // Jezeli agent poprosil o zadanie to mu odpowiedz
-                    if (GameController.getInstance().UndoneTasks.size() != 0)
+                    int TaskId =GameController.getInstance().taskControl.GetUnassignedTaskId();
+                    if (TaskId != -1)
                     {
-
                         reply.setPerformative(ACLMessage.CONFIRM);
-                        reply.setContent((Integer.toString( GameController.getInstance().UndoneTasks.get(index).id)));
+                        reply.setContent((Integer.toString( TaskId)));
                         index++;
                         System.out.println("Master: wysyłam zlecenie do zadania o numerze: "+ Integer.toString(index));
 

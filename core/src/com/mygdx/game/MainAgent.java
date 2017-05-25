@@ -16,7 +16,6 @@ public class MainAgent {
     public AgentPhysics PhysicalAgent;
     public Configuration Conf;
     public Task CurrentTask;
-    public int CurrentTaskId = -1;
 
     public MainAgent(AgentGraphic graphicalAgent, RobotAgent jadeAgent, AgentPhysics physicalAgent, Configuration conf) {
         GraphicalAgent = graphicalAgent;

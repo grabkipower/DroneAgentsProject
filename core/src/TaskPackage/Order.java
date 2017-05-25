@@ -45,11 +45,12 @@ public class Order {
         }
     }
 
-    public List<Task> CreateTasks()
+    public List<Task> CreateTasks(int index)
     {
         List<Task> tasks = new ArrayList<Task>();
         for( int i = 0; i < carries.size(); i++) {
-            Task task = new Task(carries.get(i),TransitPos,i,id, TrainsitToShelf);
+            Task task = new Task(carries.get(i),TransitPos,index,id, TrainsitToShelf);
+            index++;
             tasks.add(task);
         }
         return tasks;
