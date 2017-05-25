@@ -29,7 +29,7 @@ public class MapMain {
     public static int TileWidthNumber = 30;
     public static int TileHeightNumber = 30;
 
-
+    TiledMap tiledMap;
 
     MapRepresentation MapRep;
     public MapMain() {
@@ -42,8 +42,15 @@ public class MapMain {
         MapRep.GridCells = map.GridCells;
         MapRep.IntCells = map.IntCells;
     }
+    public void RefreshGrid()
+    {
+        MapRep = NavGraphFactory.CreateRepMap(tiledMap);
+        TileWidthNumber = MapRep.Width;
+        TileHeightNumber = MapRep.Height;
+    }
 
     public void CreateGrid(TiledMap map) {
+        tiledMap = map;
         MapRep = NavGraphFactory.CreateRepMap(map);
         TileWidthNumber = MapRep.Width;
         TileHeightNumber = MapRep.Height;

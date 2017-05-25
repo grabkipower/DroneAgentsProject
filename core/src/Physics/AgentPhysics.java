@@ -17,6 +17,7 @@ public class AgentPhysics extends PhysicsObject {
     MainAgent main;
     Vector2 DestinationPosition;
     Route CurrentRoute;
+    Point End;
 
 
     public boolean LestMove = false;
@@ -26,11 +27,8 @@ public class AgentPhysics extends PhysicsObject {
     }
 
 
-    public void NewRoute(Point End) {
-        MapMain newMap = new MapMain();
-        newMap.CreateMapRep(GameController.getInstance().map.GetMapRepresentation());
-        CurrentRoute = new Route(position, End, newMap.GetMapRepresentation(), this);
-
+    public void NewRoute(Point end) {
+        this.End = end;
     }
 
     public AgentPhysics(Point position, Point velocity, int width, int height) {
@@ -61,6 +59,14 @@ public class AgentPhysics extends PhysicsObject {
     }
 
     public void Update() {
+        if( End != null)
+        {
+            MapMain newMap = new MapMain();
+            newMap.CreateMapRep(GameController.getInstance().map.GetMapRepresentation());
+            GameController.getInstance().map.RefreshGrid();
+            CurrentRoute = new Route(position, End, GameController.getInstance().map.GetMapRepresentation(), this);
+            End = null;
+        }
         if (CurrentRoute != null && CurrentRoute.KeepMoving) {
             CurrentRoute.MakeMove();
         }

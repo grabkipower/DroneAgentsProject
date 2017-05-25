@@ -105,15 +105,14 @@ public class Route {
         opt.allowDiagonal = true;
         opt.dontCrossCorners = true;
 
-        path = null;
-while( path == null) {
-    try {
-        path = finder.findPath(start, end, map.GridCells);
-    }
-    catch (Exception e)
-    {}
-
+try {
+    path = finder.findPath(start, end, map.GridCells);
+}catch (Exception e)
+{
+    int a =2;
 }
+
+
 
 //        //TODO: smarter test...how to make sure path is smooth?
 //        int i = 0;
