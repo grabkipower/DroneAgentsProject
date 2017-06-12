@@ -35,14 +35,17 @@ public class GameConfig {
 
     public static int MapWidth = 100;
     public static int MapHeight = 100;
-    public static double Velocity = 3.5f;
+    public static double Velocity = 30.5f;
     public static float TileSize = 32;
     public static float Threshold = 0.00001f;
     public static int AgentLoadTime = 500000;
     public static long AgentsLoadTimeFloat = 5000;
+    public static long AgentLoadTimeMin = 2000;
+    public static long AgentLoadTimeMax = 10000;
     public static long AddNewOrderTime = 20000;
 
 
     public static String TaskOntology = "Task";
+    public static String StartStopOntology = "StartStopOnt";
 
 }

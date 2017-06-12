@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameConfig;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
+import com.mygdx.game.MainAgentStatus;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.ServiceException;
@@ -20,6 +21,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.ProposeInitiator;
 import jade.proto.ProposeResponder;
 import jade.wrapper.AgentController;
+import sun.applet.Main;
 
 import java.awt.*;
 
@@ -49,15 +51,14 @@ public class RobotAgent extends Agent {
                         System.out.println("Dostalem rozkaz");
                         Point Transit =GameController.getInstance().map.GetMapRepresentation().GetTransitPositions().get(10);
                         main.PhysicalAgent.NewRoute(Transit);
-                        addBehaviour(AskForTask);
                     }
                 }
             }
         };
      //   addBehaviour(wait);
-
+addBehaviour(WaitForSimulationEnd);
         CreateTopics();
-        addBehaviour(AskForTask);
+      //.  addBehaviour(AskForTask);
     }
 
 
@@ -68,6 +69,7 @@ public class RobotAgent extends Agent {
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
             msg.addReceiver(GameController.getInstance().MasterRobot.getAID());
             send(msg);
+
             addBehaviour(WaitForTaskResponse);
         }
     };
@@ -80,11 +82,14 @@ public class RobotAgent extends Agent {
             {
                 if( msg.getPerformative() == ACLMessage.CONFIRM) {
                     HandleReceivedTask(msg.getContent());
-                    removeBehaviour(this);
+                    if( main.status != MainAgentStatus.Idle)
+                    {
+                        String domek ="";
+                    }
                 }
                 else
                 {
-                    int aa =2;
+                    int aa = 2;
                 }
             }
             else
@@ -95,8 +100,12 @@ public class RobotAgent extends Agent {
 
     private void HandleReceivedTask(String content)
     {
-        int id = Integer.parseInt(content);
-        main.CurrentTask = GameController.getInstance().taskControl.GetTaskById(id);
+        String[] parts = content.split(";");
+        int id = Integer.parseInt(parts[0]);
+        System.out.println("Dostałem zadanie o id:" + id);
+        main.TaskID = id;
+        main.status = MainAgentStatus.DoingTask;
+        //main.CurrentTask = GameController.getInstance().taskControl.GetTaskById(id);
     }
 
     public void TaskDone(){
@@ -117,7 +126,22 @@ public class RobotAgent extends Agent {
     Behaviour WaitForSimulationEnd = new CyclicBehaviour() {
         @Override
         public void action() {
-            ACLMessage acl = receive();
+            ACLMessage msg = receive(MessageTemplate.MatchOntology(GameConfig.StartStopOntology));
+            if( msg != null )
+            {
+                if( msg.getPerformative() == ACLMessage.CANCEL)
+                {
+                    main.ReturnToBase = true;
+                    removeBehaviour(WaitForTaskResponse);
+
+                }
+                if( msg.getPerformative() == ACLMessage.AGREE)
+                {
+                    main.ReturnToBase = false;
+              //      main.status = MainAgentStatus.Idle;
+                    addBehaviour(AskForTask);
+                }
+            }
         }
     };
 
@@ -151,18 +175,6 @@ public class RobotAgent extends Agent {
         }
     };
 
-    private void ReceiveTask()
-    {}
-
-    private void ConfirmReceivedTask()
-    {}
-
-    private void ConfirmTaskCompletition()
-    {}
-
-    private void CheckBatteryLifetime()
-    {
-    }
 
     private void CreateTopics() {
         TopicManagementHelper topicHelper = null;

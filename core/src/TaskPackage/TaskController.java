@@ -15,7 +15,7 @@ import java.util.Random;
 public class TaskController {
     public List<Order> orders = new ArrayList<Order>();
     public List<Task> Tasks = new ArrayList<Task>();
-
+    Random generator = new Random(System.currentTimeMillis());
     int TaskIndex = 0 ;
 
     List<Point> RackPoints;
@@ -32,11 +32,15 @@ public class TaskController {
     {
         for( int i = 0; i < Tasks.size();i++)
         {
-            if(Tasks.get(i).IsAssigned == false)
-                return i;
+            if(Tasks.get(i).IsAssigned == false) {
+
+                Tasks.get(i).IsAssigned = true;
+                return Tasks.get(i).id;
+            }
         }
         return -1;
     }
+
     public void SetAsDone(int id)
     {
         for( int i = 0; i < Tasks.size(); i++)
@@ -60,7 +64,6 @@ public class TaskController {
 
     private Task CreateTask()
     {
-        Random generator = new Random(System.currentTimeMillis());
         int IndexCarry = generator.nextInt(RackPoints.size());
         int IndexName = generator.nextInt(GameConfig.CarryNames.size());
         int IndexTransit = generator.nextInt(TransitPoints.size());
@@ -70,6 +73,8 @@ public class TaskController {
         boolean TransitToShelf = TrainsitToShelfInt == 1;
 
         Task task = new Task(carry,TransitPoints.get(IndexTransit),TaskIndex,-1, TransitToShelf );
+        TaskIndex++;
         return task;
     }
 }
+

@@ -4,11 +4,13 @@ import Interfaces.AgentInterface;
 import Map.MapMain;
 import Map.MapRepresentation;
 import TaskPackage.Task;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
+import com.mygdx.game.MainAgentStatus;
 import org.xguzm.pathfinding.grid.GridCell;
 import sun.util.resources.cldr.ebu.CurrencyNames_ebu;
 
@@ -63,6 +65,8 @@ public class AgentPhysics extends PhysicsObject {
 
     public void Update() {
         HandleTaskIfNotNull();
+        HandleBaseReturn();
+
         if (CurrentRoute != null) {
             CurrentRoute.MakeMove();
         }
@@ -75,8 +79,28 @@ public class AgentPhysics extends PhysicsObject {
         // Actual position change
     }
 
+    private void HandleBaseReturn() {
+        if (main.ReturnToBase == true && main.status != MainAgentStatus.SimulationEnded) {
+            main.status = MainAgentStatus.SimulationEnded;
+            mainMap.RefreshGrid();
+            CurrentRoute = new Route(position, main.Conf.SpawnPosition, mainMap.GetMapRepresentation(), this);
+            RemoveTask();
+        }
+    }
+
+    private void RemoveTask()
+    {
+        //todo repair this:
+        main.CurrentTask = null;
+    }
 
     public void HandleTaskIfNotNull() {
+        if (main.IsDoingTask == false && main.CurrentTask == null && main.TaskID != -1) {
+            main.CurrentTask = GameController.getInstance().taskControl.GetTaskById(main.TaskID);
+            System.out.println("Przypisuje sobie zadanie o id " + main.TaskID);
+            main.IsDoingTask = true;
+            main.status = MainAgentStatus.DoingTask;
+        }
         if (main.CurrentTask == null)
             return;
         if (mainMap == null) {
@@ -87,7 +111,6 @@ public class AgentPhysics extends PhysicsObject {
         switch (main.CurrentTask.Status) {
 
             case NotBegan:
-
                 mainMap.RefreshGrid();
                 CurrentRoute = new Route(position, main.CurrentTask.GetStartPoint(), mainMap.GetMapRepresentation(), this);
                 main.CurrentTask.Status = Task.TaskStage.MovingToStart;
@@ -115,7 +138,12 @@ public class AgentPhysics extends PhysicsObject {
             case TaskEnded:
                 main.CurrentTask.IsDone = true;
                 GameController.getInstance().taskControl.SetAsDone(main.CurrentTask.id);
+                main.CurrentTask = null;
                 main.JadeAgent.TaskDone();
+                main.IsDoingTask = false;
+                System.out.println("Wykonalem zadanie o id " + main.TaskID);
+                main.TaskID = -1;
+                main.status = MainAgentStatus.Idle;
                 break;
         }
     }

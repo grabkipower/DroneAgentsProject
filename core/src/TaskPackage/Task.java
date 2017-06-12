@@ -4,6 +4,7 @@ import com.mygdx.game.GameConfig;
 import com.mygdx.game.GameController;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by Mike on 25.05.2017.
@@ -21,6 +22,7 @@ public class Task {
     public TaskStage Status;
     int wait = 0;
     long StartWait;
+    private long CurrentWaitTime = 0;
 
 
     public Task(Carry carry, Point transit, int id, int orderId, boolean transitToSHelf) {

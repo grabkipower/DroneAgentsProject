@@ -16,6 +16,12 @@ public class MainAgent {
     public AgentPhysics PhysicalAgent;
     public Configuration Conf;
     public Task CurrentTask;
+    public int TaskID = -1;
+    public boolean IsDoingTask = false;
+    public boolean ReturnToBase = false;
+
+   public  MainAgentStatus status = MainAgentStatus.Idle;
+
 
     public MainAgent(AgentGraphic graphicalAgent, RobotAgent jadeAgent, AgentPhysics physicalAgent, Configuration conf) {
         GraphicalAgent = graphicalAgent;
@@ -37,3 +43,4 @@ public class MainAgent {
         GraphicalAgent.Update();
     }
 }
+

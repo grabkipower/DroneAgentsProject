@@ -44,6 +44,11 @@ public class GameController {
         return ourInstance;
     }
 
+    public boolean StartTheGame = false;
+    public boolean StopTheGame = false;
+    public boolean GameInProgress = false;
+
+
 
     private GameController() {
         JadeEngine = JadeController.getInstance();

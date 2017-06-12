@@ -78,12 +78,11 @@ public class Route {
         if (Status == RouteStatus.DestinationAchieved)
             return;
 
-        Vector2 CalculatedPosition = new Vector2(agent.PhysicalPosition.x,agent.PhysicalPosition.y);
+        Vector2 CalculatedPosition = new Vector2(agent.PhysicalPosition.x, agent.PhysicalPosition.y);
 
         CalculatedPosition.x += vel * Direction.x;
         CalculatedPosition.y += vel * Direction.y;
-Rectangle rect = new Rectangle(CalculatedPosition.x,CalculatedPosition.y,32.0f,32.0f);
-
+        Rectangle rect = new Rectangle(CalculatedPosition.x, CalculatedPosition.y, 32.0f, 32.0f);
 
 
 //
@@ -93,9 +92,9 @@ Rectangle rect = new Rectangle(CalculatedPosition.x,CalculatedPosition.y,32.0f,3
 //           return;
 //       }
 
-       agent.PhysicalPosition.x = CalculatedPosition.x;
-       agent.PhysicalPosition.y = CalculatedPosition.y;
-       agent.SetRectangle();
+        agent.PhysicalPosition.x = CalculatedPosition.x;
+        agent.PhysicalPosition.y = CalculatedPosition.y;
+        agent.SetRectangle();
 
         agent.SetRectangle();
 
@@ -107,12 +106,10 @@ Rectangle rect = new Rectangle(CalculatedPosition.x,CalculatedPosition.y,32.0f,3
 
     }
 
-    private boolean CheckForCollision( Rectangle currentRect) {
-        for( MainAgent AgentO : GameController.getInstance().Agents)
-        {
-            if( AgentO.Conf.Index != agent.main.Conf.Index)
-            {
-                if( Intersector.overlaps(AgentO.PhysicalAgent.GetRectangle(),currentRect))
+    private boolean CheckForCollision(Rectangle currentRect) {
+        for (MainAgent AgentO : GameController.getInstance().Agents) {
+            if (AgentO.Conf.Index != agent.main.Conf.Index) {
+                if (Intersector.overlaps(AgentO.PhysicalAgent.GetRectangle(), currentRect))
                     return true;
             }
         }
@@ -151,7 +148,12 @@ Rectangle rect = new Rectangle(CalculatedPosition.x,CalculatedPosition.y,32.0f,3
         GridCell start = map.GridCells.getCell(Start.x, Start.y), end = map.GridCells.getCell(End.x, End.y);
 
 
-        path = finder.findPath(start, end, map.GridCells);
+        try {
+            path = finder.findPath(start, end, map.GridCells);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (path == null) {
             int a = 2;
         }

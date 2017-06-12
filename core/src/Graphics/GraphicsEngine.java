@@ -1,16 +1,22 @@
 package Graphics;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.GameController;
 import com.mygdx.game.MainAgent;
 import com.mygdx.game.MyOrthogonalMap;
+
 
 import java.util.List;
 
@@ -38,7 +44,7 @@ public class GraphicsEngine {
     }
 
     public void create() {
-        Gdx.graphics.setWindowedMode(1000,900);
+        Gdx.graphics.setWindowedMode(1100, 950);
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
@@ -52,6 +58,7 @@ public class GraphicsEngine {
         tiledMap = new TmxMapLoader().load("map.tmx");
         tiledMapRenderer = new MyOrthogonalMap(tiledMap);
         InitializeObjects();
+
     }
 
     private void InitializeObjects() {
@@ -59,10 +66,7 @@ public class GraphicsEngine {
             agent.InitializeGraphic(texture);
             tiledMapRenderer.addSprite(agent.GraphicalAgent.sprite);
         }
-
     }
-
-
     public void render() {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -71,5 +75,8 @@ public class GraphicsEngine {
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
     }
+
+
+
 
 }

@@ -30,12 +30,29 @@ public class MapRepresentation {
             int i = point.x - 1;
             int j = point.y - 1;
             for (; i <= point.x + 1; i++)
-                for (; j <= point.y + 1; j++) {
+                for (j = point.y - 1; j <= point.y + 1; j++) {
                     if (!CheckIsBlocked(i, j))
                         return new Point(i, j);
                 }
+             i = point.x - 2;
+             j = point.y - 2;
+            for (; i <= point.x + 2; i++)
+                for (j = point.y - 2; j <= point.y + 2; j++) {
+                    if (!CheckIsBlocked(i, j))
+                        return new Point(i, j);
+                }
+
+            i = point.x - 3;
+            j = point.y - 3;
+            for (; i <= point.x + 3; i++)
+                for (j = point.y - 3; j <= point.y + 3; j++) {
+                    if (!CheckIsBlocked(i, j))
+                        return new Point(i, j);
+                }
+            throw new Exception("Not blocked point not found!");
+        } else {
+            return point;
         }
-        throw new Exception("Not blocked point not found!");
     }
 
     public List<Point> GetSpawnPositions() {
